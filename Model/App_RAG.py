@@ -170,11 +170,11 @@ def main():
             chain = build_chain()
             prompt_values = {"query": query, "context": context}
             result_text = chain.run(prompt_values)
-        st.markdown("### RAG Based Recommendation")
+        st.markdown("### RAG Based Recommendations: ")
         st.write(result_text)
 
         st.markdown("---")
-        st.markdown("### Similarity Search Results")
+        st.markdown("### Similarity Search Based Results (Baseline Approach): ")
         for i, (doc, score) in enumerate(filtered_docs[:5], start=1):
             st.markdown(f"**{i}. Score:** `{score:.3f}`")
             assessment_name = doc.page_content.splitlines()[0]
