@@ -13,16 +13,14 @@ def extract_all_text(url):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # If ChromeDriver is not in your PATH, specify the executable_path parameter:
     driver = webdriver.Chrome(options=chrome_options)
     
     driver.get(url)
-    time.sleep(5)  # Adjust wait time as necessary to allow dynamic content to load
+    time.sleep(5)
     html = driver.page_source
     driver.quit()
     
     soup = BeautifulSoup(html, "html.parser")
-    # Remove script and style elements
     for element in soup(["script", "style"]):
         element.decompose()
     text = soup.get_text(separator=" ", strip=True)
