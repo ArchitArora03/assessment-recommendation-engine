@@ -174,7 +174,7 @@ def main():
         st.write(result_text)
 
         st.markdown("---")
-        st.markdown("### Similarity Search Based Results (Baseline Approach): ")
+        st.markdown("### Similarity Search Based Recommendations (Baseline Approach): ")
         for i, (doc, score) in enumerate(filtered_docs[:5], start=1):
             st.markdown(f"**{i}. Score:** `{score:.3f}`")
             assessment_name = doc.page_content.splitlines()[0]
