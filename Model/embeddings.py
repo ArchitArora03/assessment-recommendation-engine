@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-INPUT_FILE = "final.jsonl"
+INPUT_FILE = "data.jsonl"
 INDEX_DIR = "faiss_index"
 
 def load_products(filepath):

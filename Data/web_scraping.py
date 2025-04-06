@@ -6,7 +6,7 @@ import re
 
 INPUT_FILE = "shl_products_12pages.jsonl"
 
-OUTPUT_FILE = "final.jsonl"
+OUTPUT_FILE = "data.jsonl"
 
 def parse_detail_page(product):
     """

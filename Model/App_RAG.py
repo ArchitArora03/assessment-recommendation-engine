@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-INPUT_FILE = "final.jsonl"
+INPUT_FILE = "data.jsonl"
 
 @st.cache_data(show_spinner=False)
 def load_products(file_path):
