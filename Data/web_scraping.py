@@ -4,10 +4,9 @@ import json
 import time
 import re
 
-# Input JSONL file with product records
 INPUT_FILE = "shl_products_12pages.jsonl"
-# Output JSONL file with enriched data for all products
-OUTPUT_FILE = "final_2.jsonl"
+
+OUTPUT_FILE = "final.jsonl"
 
 def parse_detail_page(product):
     """
@@ -21,7 +20,7 @@ def parse_detail_page(product):
     """
     url = product.get("URL", "")
     if not url:
-        return product  # No URL to parse
+        return product  
 
     try:
         resp = requests.get(url)
@@ -31,14 +30,14 @@ def parse_detail_page(product):
 
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        # 1. Description
+
         desc_heading = soup.find("h4", string="Description")
         if desc_heading:
             desc_p = desc_heading.find_next_sibling("p")
             if desc_p:
                 product["Description"] = desc_p.get_text(separator=" ", strip=True)
 
-        # 2. Assessment length (Duration)
+        
         duration_heading = soup.find("h4", string="Assessment length")
         if duration_heading:
             dur_p = duration_heading.find_next_sibling("p")
@@ -50,14 +49,14 @@ def parse_detail_page(product):
                 else:
                     product["Duration"] = text
 
-        # 3. Job Levels
+        
         job_levels_heading = soup.find("h4", string="Job levels")
         if job_levels_heading:
             jl_p = job_levels_heading.find_next_sibling("p")
             if jl_p:
                 product["Job Levels"] = jl_p.get_text(separator=" ", strip=True)
 
-        # 4. Test Type
+    
         test_type_p = soup.find(lambda tag: tag.name == "p" and "Test Type:" in tag.get_text())
         if test_type_p:
             container = test_type_p.find("span", class_="d-flex ms-2")
@@ -69,7 +68,6 @@ def parse_detail_page(product):
                 else:
                     product["Test Type"] = None
 
-        # 5. Remote Testing: Set default to "Yes" for all products.
         product["Remote Support"] = "Yes"
 
     except Exception as e:
@@ -78,7 +76,6 @@ def parse_detail_page(product):
     return product
 
 def main():
-    # Read all product records from the input JSONL file.
     products = []
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         for line in f:
@@ -90,15 +87,14 @@ def main():
 
     print(f"[+] Loaded {len(products)} products from {INPUT_FILE}")
 
-    # Process all products
+    
     enriched_products = []
     for i, product in enumerate(products, start=1):
         print(f"Enriching product {i}/{len(products)}: {product.get('Name', 'Unknown')}")
         updated_product = parse_detail_page(product)
         enriched_products.append(updated_product)
-        time.sleep(1)  # Polite delay between requests
+        time.sleep(1)  
 
-    # Write the enriched data to the new output JSONL file.
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         for prod in enriched_products:
             f.write(json.dumps(prod, ensure_ascii=False) + "\n")
