@@ -84,7 +84,7 @@ def build_chain():
         "Based on the above, please provide your top 10 assessment recommendations with relevant details. "
         "Do not change or modify assessment names"
         "Give importance to matching skill names in query and assessment names"
-        "Give importance to skills mentioned in the query (for example: SQL, Java, Python etc.) but do not restrict skills to just the examples provided in this prompt. "
+        "Give importance to skills mentioned in the query (for example:"python", "java", "sql", "react", "javascript", "c++", "c#", "node", "angular", "ruby", "php", "html", "css", "aws", "azure", "gcp", "django", "flask", "spring", "kotlin", "swift" etc.) but do not restrict skills to just the examples provided in this prompt. "
         "Also, consider test duration if mentioned in the query."'''
     )
     system_message = SystemMessagePromptTemplate.from_template(system_prompt)
