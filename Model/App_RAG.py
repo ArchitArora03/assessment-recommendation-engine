@@ -20,7 +20,7 @@ INPUT_FILE = "final.jsonl"
 
 @st.cache_data(show_spinner=False)
 def load_products(file_path):
-    """Load product records from a JSONL file."""
+    
     products = []
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -33,11 +33,6 @@ def load_products(file_path):
 
 @st.cache_data(show_spinner=False)
 def build_documents(products):
-    """
-    Build LangChain Document objects.
-    Each Document's page_content is a combination of the product Name and Description.
-    Metadata includes URL, Duration, Job Levels, Test Type, Remote Support, and Adaptive/IRT.
-    """
     docs = []
     for product in products:
         content = product.get("Name", "") + "\n" + product.get("Description", "")
@@ -53,15 +48,11 @@ def build_documents(products):
     return docs
 
 def get_vectorstore(embeddings):
-    """
-    Load the FAISS vector store from local storage if it exists; otherwise, build a new one.
-    """
     products = load_products(INPUT_FILE)
     docs = build_documents(products)
     index_dir = "faiss_index"
     if os.path.exists(index_dir) and os.listdir(index_dir):
         vectorstore = FAISS.load_local(index_dir, embeddings,allow_dangerous_deserialization=True)
-        st.info("Loaded vector store from local storage.")
     else:
         st.info("Local vector store not found. Building new index...")
         vectorstore = FAISS.from_documents(docs, embeddings)
@@ -71,7 +62,7 @@ def get_vectorstore(embeddings):
 
 def build_chain():
     """Build the LLM chain with a custom chat prompt using ChatOpenAI."""
-    system_prompt = (
+    system_prompt = ('''
         "You are a highly knowledgeable assessment recommendation engine. "
         "Based on the provided context, generate a detailed and accurate recommendation "
         "of assessments that best match the user's query. Include key features such as Duration, "
@@ -86,15 +77,15 @@ def build_chain():
         "E: Assessment Exercises\n"
         "K: Knowledge & Skills\n"
         "P: Personality & Behavior\n"
-        "S: Simulations\n"
+        "S: Simulations\n"'''
     )
-    human_prompt = (
-        "User Query: {query}\n\nContext:\n{context}\n\n"
+    human_prompt = ('''
+        "User Query: {query} \n\n Context:\n {context} \n\n"
         "Based on the above, please provide your top 10 assessment recommendations with relevant details. "
         "Do not change or modify assessment names"
         "Give importance to matching skill names in query and assessment names"
         "Give importance to skills mentioned in the query (for example: SQL, Java, Python etc.) but do not restrict skills to just the examples provided in this prompt. "
-        "Also, consider test duration if mentioned in the query."
+        "Also, consider test duration if mentioned in the query."'''
     )
     system_message = SystemMessagePromptTemplate.from_template(system_prompt)
     human_message = HumanMessagePromptTemplate.from_template(human_prompt)
@@ -106,7 +97,7 @@ def build_chain():
 
 def main():
     st.title("Assessment Recommendation Engine")
-    st.write("Enter a job description or query to get your assessment recommendations.")
+    st.write("Enter a job description or query to get recommendations from SHL's assessment catalogue.")
 
     query = st.text_input("Enter your query:")
 
