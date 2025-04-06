@@ -16,7 +16,7 @@ load_dotenv()
 load_dotenv()  # Loads environment variables, including OPENAI_API_KEY
 
 # Update the path to your JSONL file as needed.
-INPUT_FILE = "/Users/architarora/Desktop/Archit Arora/8th Semester/New Folder/assessment-recommendation-engine/final.jsonl"
+INPUT_FILE = "final.jsonl"
 
 @st.cache_data(show_spinner=False)
 def load_products(file_path):
