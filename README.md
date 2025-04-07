@@ -1,4 +1,4 @@
-# 🔍 SHL Assessment Recommendation Engine
+# 🔍 Assessment Recommendation Engine
 
 This project is a **Retrieval-Augmented Generation (RAG)** based intelligent recommendation engine designed to suggest the most relevant **SHL assessment tests** for a given job description or query. It supports both free-text queries and URLs pointing to job descriptions.
 
