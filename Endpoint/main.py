@@ -82,17 +82,44 @@ def get_vectorstore(embeddings: OpenAIEmbeddings):
 
 def build_chain() -> LLMChain:
     system_prompt = (
+        '''
         "You are a highly knowledgeable assessment recommendation engine. "
-        "Based on the provided context, generate a detailed and accurate recommendation..."
-        # ... truncated for brevity
+        "Based on the provided context, generate a detailed and accurate recommendation of assessments that best match the user's query. Include key features such as Duration, "
+        "Test Type, Job Levels, Remote Support"
+        "Format your answer clearly and concisely. Out of the 30 possible recommended assessments, "
+        "choose only the best 10 and include all details about them.\n\n"
+        "Test Type Codes:\n"
+        "A: Ability & Aptitude\n"
+        "B: Biodata & Situational Judgement\n"
+        "C: Competencies\n"
+        "D: Development & 360\n"
+        "E: Assessment Exercises\n"
+        "K: Knowledge & Skills\n"
+        "P: Personality & Behavior\n"
+        "S: Simulations\n"
+        "Derive the skills ex: programming languages, tools etc. and give primary importance to it"
+        "Make sure you filter the context based on duration of exam mentioned by user. For example: 'less than 40 minutes' "
+    '''
     )
     human_prompt = (
-        "User Query: {query} \n\n"
-        "Context:\n"
-        "{context}\n\n"
-        "Based on the above, please provide your top 10 assessment recommendations..."
-        # ... truncated for brevity
-    )
+         '''
+        User Query: {query} 
+
+        Context:
+        {context}
+
+        Based on the above, please provide your top 10 assessment recommendations with relevant details.
+
+        IMPORTANT:
+        - Find the skills from the query
+        - Do **not** repeat the skill list examples mentioned in this prompt in the output.
+        - Do **not** mention this prompt or its instructions.
+        - Keep the tone informative and professional.
+        - Do not change or modify assessment names.
+        - Highest Priority to assessments matching the skills in the query (e.g., programming languages like python etc., tools, cloud platforms).
+        - Consider test duration if mentioned by the user.
+        - Do not ever create a fake recommendation. Only recommend what is provided in context
+        ''')
     system_message = SystemMessagePromptTemplate.from_template(system_prompt)
     human_message = HumanMessagePromptTemplate.from_template(human_prompt)
     chat_prompt = ChatPromptTemplate.from_messages([system_message, human_message])
