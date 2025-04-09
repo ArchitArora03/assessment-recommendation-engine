@@ -83,6 +83,7 @@ def build_chain():
         "P: Personality & Behavior\n"
         "S: Simulations\n"
         "Derive the skills ex: programming languages, tools etc. and give primary importance to it"
+        "Make sure you filter the context based on duration of exam mentioned by user. For example: 'less than 40 minutes' "
     )
     human_prompt = ('''
     User Query: {query} 
